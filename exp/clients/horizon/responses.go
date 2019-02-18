@@ -155,3 +155,7 @@ type PriceLevel = hProtocol.PriceLevel
 
 // Deprecated: use protocols/horizon instead
 type Transaction = hProtocol.Transaction
+
+type AccountData struct {
+	Value string `json:"value"`
+}

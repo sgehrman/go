@@ -15,16 +15,12 @@ func (ar AccountRequest) BuildUrl(rtype string) (endpoint string, err error) {
 			"accounts/%s",
 			ar.AccountId,
 		)
-		break
-
 	case "data":
 		endpoint = fmt.Sprintf(
 			"accounts/%s/data/%s",
 			ar.AccountId,
 			ar.DataKey,
 		)
-		break
-
 	default:
 		err = errors.Wrap(err, "Invalid request type, expected 'id' or 'data'")
 

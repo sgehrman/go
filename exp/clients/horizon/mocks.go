@@ -16,9 +16,9 @@ func (m *MockClient) AccountDetail(request AccountRequest) (Account, error) {
 }
 
 // AccountData is a mocking method
-func (m *MockClient) AccountData(request AccountRequest) (Account, error) {
+func (m *MockClient) AccountData(request AccountRequest) (AccountData, error) {
 	a := m.Called(request)
-	return a.Get(0).(Account), a.Error(1)
+	return a.Get(0).(AccountData), a.Error(1)
 }
 
 // ensure that the MockClient implements ClientInterface

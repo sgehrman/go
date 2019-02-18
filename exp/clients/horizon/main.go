@@ -51,7 +51,7 @@ type Client struct {
 
 type ClientInterface interface {
 	AccountDetail(request AccountRequest) (Account, error)
-	AccountData(request AccountRequest) (Account, error)
+	AccountData(request AccountRequest) (AccountData, error)
 }
 
 // DefaultTestNetClient is a default client to connect to test network
