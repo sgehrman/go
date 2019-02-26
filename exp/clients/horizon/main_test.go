@@ -152,6 +152,42 @@ func TestAccountData(t *testing.T) {
 
 }
 
+func TestEffectsRequest(t *testing.T) {
+	hmock := httptest.NewClient()
+	client := &Client{
+		HorizonURL: "https://localhost/",
+		HTTP:       hmock,
+	}
+
+	effectRequest := EffectRequest{}
+
+	// all effects
+	hmock.On(
+		"GET",
+		"https://localhost/effects",
+	).ReturnString(200, effectsResponse)
+
+	effects, err := client.AllEffects(effectRequest)
+	if assert.NoError(t, err) {
+		assert.IsType(t, effects, EffectsPage{})
+
+	}
+
+	// wrong parameters
+	effectRequest = EffectRequest{AccountId: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU"}
+	hmock.On(
+		"GET",
+		"https://localhost/effects",
+	).ReturnString(200, effectsResponse)
+
+	_, err = client.AllEffects(effectRequest)
+	// error case: few parameters
+	if assert.Error(t, err) {
+		assert.Contains(t, err.Error(), "Too many parameters")
+	}
+
+}
+
 var accountResponse = `{
   "_links": {
     "self": {
@@ -232,4 +268,83 @@ var notFoundResponse = `{
 
 var accountData = `{
   "value": "dGVzdA=="
+}`
+
+var effectsResponse = `{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/43989725060534273/effects?cursor=&limit=10&order=asc"
+    },
+    "next": {
+      "href": "https://horizon-testnet.stellar.org/operations/43989725060534273/effects?cursor=43989725060534273-3&limit=10&order=asc"
+    },
+    "prev": {
+      "href": "https://horizon-testnet.stellar.org/operations/43989725060534273/effects?cursor=43989725060534273-1&limit=10&order=desc"
+    }
+  },
+  "_embedded": {
+    "records": [
+      {
+        "_links": {
+          "operation": {
+            "href": "https://horizon-testnet.stellar.org/operations/43989725060534273"
+          },
+          "succeeds": {
+            "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=43989725060534273-1"
+          },
+          "precedes": {
+            "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=43989725060534273-1"
+          }
+        },
+        "id": "0043989725060534273-0000000001",
+        "paging_token": "43989725060534273-1",
+        "account": "GANHAS5OMPLKD6VYU4LK7MBHSHB2Q37ZHAYWOBJRUXGDHMPJF3XNT45Y",
+        "type": "account_debited",
+        "type_i": 3,
+        "created_at": "2018-07-27T21:00:12Z",
+        "asset_type": "native",
+        "amount": "9999.9999900"
+      },
+      {
+        "_links": {
+          "operation": {
+            "href": "https://horizon-testnet.stellar.org/operations/43989725060534273"
+          },
+          "succeeds": {
+            "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=43989725060534273-2"
+          },
+          "precedes": {
+            "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=43989725060534273-2"
+          }
+        },
+        "id": "0043989725060534273-0000000002",
+        "paging_token": "43989725060534273-2",
+        "account": "GBO7LQUWCC7M237TU2PAXVPOLLYNHYCYYFCLVMX3RBJCML4WA742X3UB",
+        "type": "account_credited",
+        "type_i": 2,
+        "created_at": "2018-07-27T21:00:12Z",
+        "asset_type": "native",
+        "amount": "9999.9999900"
+      },
+      {
+        "_links": {
+          "operation": {
+            "href": "https://horizon-testnet.stellar.org/operations/43989725060534273"
+          },
+          "succeeds": {
+            "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=43989725060534273-3"
+          },
+          "precedes": {
+            "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=43989725060534273-3"
+          }
+        },
+        "id": "0043989725060534273-0000000003",
+        "paging_token": "43989725060534273-3",
+        "account": "GANHAS5OMPLKD6VYU4LK7MBHSHB2Q37ZHAYWOBJRUXGDHMPJF3XNT45Y",
+        "type": "account_removed",
+        "type_i": 1,
+        "created_at": "2018-07-27T21:00:12Z"
+      }
+    ]
+  }
 }`
