@@ -37,3 +37,15 @@ func loadMemo(p *Payment) error {
 	defer res.Body.Close()
 	return json.NewDecoder(res.Body).Decode(&p.Memo)
 }
+
+func checkParams(params ...interface{}) int {
+	counter := 0
+
+	for _, param := range params {
+		if param != "" {
+			counter++
+		}
+	}
+
+	return counter
+}

@@ -1,11 +1,27 @@
 package horizon
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stellar/go/support/http/httptest"
 	"github.com/stretchr/testify/assert"
 )
+
+func ExampleClient_AccountDetail() {
+
+	client := DefaultPublicNetClient
+	accountRequest := AccountRequest{AccountId: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU"}
+
+	account, err := client.AccountDetail(accountRequest)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Print(account)
+
+}
 
 func TestAccountDetail(t *testing.T) {
 	hmock := httptest.NewClient()
@@ -14,7 +30,33 @@ func TestAccountDetail(t *testing.T) {
 		HTTP:       hmock,
 	}
 
-	accountRequest := AccountRequest{AccountId: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU"}
+	// no parameters
+	accountRequest := AccountRequest{}
+	hmock.On(
+		"GET",
+		"https://localhost/accounts/GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU",
+	).ReturnString(200, accountResponse)
+
+	_, err := client.AccountDetail(accountRequest)
+	// error case: no account id
+	if assert.Error(t, err) {
+		assert.Contains(t, err.Error(), "No account ID provided")
+	}
+
+	// wrong parameters
+	accountRequest = AccountRequest{DataKey: "test"}
+	hmock.On(
+		"GET",
+		"https://localhost/accounts/GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU",
+	).ReturnString(200, accountResponse)
+
+	_, err = client.AccountDetail(accountRequest)
+	// error case: no account id
+	if assert.Error(t, err) {
+		assert.Contains(t, err.Error(), "No account ID provided")
+	}
+
+	accountRequest = AccountRequest{AccountId: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU"}
 
 	// happy path
 	hmock.On(
@@ -69,7 +111,33 @@ func TestAccountData(t *testing.T) {
 		HTTP:       hmock,
 	}
 
-	accountRequest := AccountRequest{AccountId: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU", DataKey: "test"}
+	// no parameters
+	accountRequest := AccountRequest{}
+	hmock.On(
+		"GET",
+		"https://localhost/accounts/GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU/data/test",
+	).ReturnString(200, accountResponse)
+
+	_, err := client.AccountData(accountRequest)
+	// error case: few parameters
+	if assert.Error(t, err) {
+		assert.Contains(t, err.Error(), "Too few parameters")
+	}
+
+	// wrong parameters
+	accountRequest = AccountRequest{AccountId: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU"}
+	hmock.On(
+		"GET",
+		"https://localhost/accounts/GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU/data/test",
+	).ReturnString(200, accountResponse)
+
+	_, err = client.AccountData(accountRequest)
+	// error case: few parameters
+	if assert.Error(t, err) {
+		assert.Contains(t, err.Error(), "Too few parameters")
+	}
+
+	accountRequest = AccountRequest{AccountId: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU", DataKey: "test"}
 
 	// happy path
 	hmock.On(

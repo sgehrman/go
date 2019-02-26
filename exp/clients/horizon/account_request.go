@@ -7,27 +7,38 @@ import (
 	"github.com/stellar/go/support/errors"
 )
 
-func (ar AccountRequest) BuildUrl(rtype string) (endpoint string, err error) {
+// BuildUrl creates the endpoint to be queried based on the data in the AccountRequest struct.
+// If only AccountId is present, then the endpoint for account details is returned.
+// If both AccounId and DataKey are present, then the endpoint for getting account data is returned
+func (ar AccountRequest) BuildUrl() (endpoint string, err error) {
 
-	switch rtype {
-	case "account":
-		endpoint = fmt.Sprintf(
-			"accounts/%s",
-			ar.AccountId,
-		)
-	case "data":
+	// to do:  check if ar.accountId  is a valid public key. I wonder if this is the right place for this.
+
+	noOfParamsSet := checkParams(ar.DataKey, ar.AccountId)
+
+	if noOfParamsSet >= 1 && ar.AccountId == "" {
+		err = errors.New("Invalid request. Too few parameters")
+	}
+
+	if noOfParamsSet <= 0 {
+		err = errors.New("Invalid request. No parameters")
+	}
+
+	if err != nil {
+		return endpoint, err
+	}
+
+	if ar.DataKey != "" && ar.AccountId != "" {
 		endpoint = fmt.Sprintf(
 			"accounts/%s/data/%s",
 			ar.AccountId,
 			ar.DataKey,
 		)
-	default:
-		err = errors.Wrap(err, "Invalid request type, expected 'id' or 'data'")
-
-	}
-
-	if err != nil {
-		return endpoint, err
+	} else if ar.AccountId != "" {
+		endpoint = fmt.Sprintf(
+			"accounts/%s",
+			ar.AccountId,
+		)
 	}
 
 	query := url.Values{}
@@ -45,10 +56,19 @@ func (ar AccountRequest) BuildUrl(rtype string) (endpoint string, err error) {
 	}
 
 	endpoint = fmt.Sprintf(
-		"%s?%s",
+		"%s",
 		endpoint,
-		query.Encode(),
 	)
+
+	queryParams := query.Encode()
+
+	if queryParams != "" {
+		endpoint = fmt.Sprintf(
+			"%s?%s",
+			endpoint,
+			queryParams,
+		)
+	}
 
 	_, err = url.Parse(endpoint)
 	if err != nil {

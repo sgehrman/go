@@ -1,8 +1,18 @@
 package horizon
 
+import "github.com/stellar/go/support/errors"
+
 func (c *Client) AccountDetail(request AccountRequest) (account Account, err error) {
 
-	endpoint, err := request.BuildUrl("account")
+	if request.AccountId == "" {
+		err = errors.New("No account ID provided")
+	}
+
+	if err != nil {
+		return
+	}
+
+	endpoint, err := request.BuildUrl()
 	if err != nil {
 		return
 	}
@@ -19,7 +29,15 @@ func (c *Client) AccountDetail(request AccountRequest) (account Account, err err
 
 func (c *Client) AccountData(request AccountRequest) (AccountData AccountData, err error) {
 
-	endpoint, err := request.BuildUrl("data")
+	if request.AccountId == "" || request.DataKey == "" {
+		err = errors.New("Too few parameters")
+	}
+
+	if err != nil {
+		return
+	}
+
+	endpoint, err := request.BuildUrl()
 	if err != nil {
 		return
 	}

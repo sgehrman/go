@@ -44,11 +44,13 @@ type HTTP interface {
 	PostForm(url string, data url.Values) (resp *http.Response, err error)
 }
 
+// Client struct contains data for creating an horizon client that connects to the stellar network
 type Client struct {
 	HorizonURL string
 	HTTP       HTTP
 }
 
+// ClientInterface contains methods implemented by the horizon client
 type ClientInterface interface {
 	AccountDetail(request AccountRequest) (Account, error)
 	AccountData(request AccountRequest) (AccountData, error)
@@ -70,6 +72,7 @@ type HorizonRequest interface {
 	BuildUrl(requestType string) (string error)
 }
 
+// AccountRequest struct contains data for making requests to the accounts endpoint of an horizon server
 type AccountRequest struct {
 	AccountId string
 	DataKey   string
