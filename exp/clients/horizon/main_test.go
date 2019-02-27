@@ -65,6 +65,7 @@ func TestAccountDetail(t *testing.T) {
 	).ReturnString(200, accountResponse)
 
 	account, err := client.AccountDetail(accountRequest)
+
 	if assert.NoError(t, err) {
 		assert.Equal(t, account.ID, "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU")
 		assert.Equal(t, account.PT, "1")
@@ -82,7 +83,7 @@ func TestAccountDetail(t *testing.T) {
 		"https://localhost/accounts/GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU",
 	).ReturnString(404, notFoundResponse)
 
-	_, err = client.AccountDetail(accountRequest)
+	account, err = client.AccountDetail(accountRequest)
 	if assert.Error(t, err) {
 		assert.Contains(t, err.Error(), "Horizon error")
 		horizonError, ok := err.(*Error)

@@ -73,7 +73,7 @@ var DefaultPublicNetClient = &Client{
 }
 
 type HorizonRequest interface {
-	BuildUrl(requestType string) (string error)
+	BuildUrl() (string, error)
 }
 
 // AccountRequest struct contains data for making requests to the accounts endpoint of an horizon server

@@ -1,6 +1,25 @@
 package horizon
 
-import "github.com/stellar/go/support/errors"
+import (
+	"github.com/stellar/go/support/errors"
+)
+
+func SendRequest(hr HorizonRequest, c Client, a interface{}) (err error) {
+
+	endpoint, err := hr.BuildUrl()
+	if err != nil {
+		return
+	}
+
+	resp, err := c.HTTP.Get(c.HorizonURL + endpoint)
+	if err != nil {
+
+		return
+	}
+
+	err = decodeResponse(resp, &a)
+	return
+}
 
 func (c *Client) AccountDetail(request AccountRequest) (account Account, err error) {
 
@@ -12,17 +31,7 @@ func (c *Client) AccountDetail(request AccountRequest) (account Account, err err
 		return
 	}
 
-	endpoint, err := request.BuildUrl()
-	if err != nil {
-		return
-	}
-
-	resp, err := c.HTTP.Get(c.HorizonURL + endpoint)
-	if err != nil {
-		return
-	}
-
-	err = decodeResponse(resp, &account)
+	err = SendRequest(request, *c, &account)
 	return
 
 }
