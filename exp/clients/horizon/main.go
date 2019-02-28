@@ -1,5 +1,5 @@
-// package horizon is an experimental horizon client that provides access to the horizon server
-package horizon
+// package horizonclient is an experimental horizon client that provides access to the horizon server
+package horizonclient
 
 import (
 	"errors"
@@ -80,10 +80,6 @@ type HorizonRequest interface {
 type AccountRequest struct {
 	AccountId string
 	DataKey   string
-
-	Order  Order
-	Cursor string
-	Limit  int
 }
 
 type EffectRequest struct {
@@ -91,8 +87,7 @@ type EffectRequest struct {
 	LedgerId        string
 	OperationId     string
 	TransactionHash string
-
-	Order  Order
-	Cursor string
-	Limit  int
+	Order           Order
+	Cursor          string
+	Limit           int
 }

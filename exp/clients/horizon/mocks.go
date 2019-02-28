@@ -1,4 +1,4 @@
-package horizon
+package horizonclient
 
 import (
 	"github.com/stretchr/testify/mock"

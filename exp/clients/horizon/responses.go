@@ -1,4 +1,4 @@
-package horizon
+package horizonclient
 
 import (
 	"encoding/json"

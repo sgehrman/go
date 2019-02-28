@@ -1,4 +1,4 @@
-package horizon
+package horizonclient
 
 import (
 	"fmt"
@@ -12,15 +12,13 @@ import (
 // If both AccounId and DataKey are present, then the endpoint for getting account data is returned
 func (ar AccountRequest) BuildUrl() (endpoint string, err error) {
 
-	// to do:  check if ar.accountId  is a valid public key. I wonder if this is the right place for this.
+	nParams := checkParams(ar.DataKey, ar.AccountId)
 
-	noOfParamsSet := checkParams(ar.DataKey, ar.AccountId)
-
-	if noOfParamsSet >= 1 && ar.AccountId == "" {
+	if nParams >= 1 && ar.AccountId == "" {
 		err = errors.New("Invalid request. Too few parameters")
 	}
 
-	if noOfParamsSet <= 0 {
+	if nParams <= 0 {
 		err = errors.New("Invalid request. No parameters")
 	}
 
@@ -41,40 +39,10 @@ func (ar AccountRequest) BuildUrl() (endpoint string, err error) {
 		)
 	}
 
-	query := url.Values{}
-
-	if ar.Cursor != "" {
-		query.Add("cursor", ar.Cursor)
-	}
-
-	if ar.Limit > 0 {
-		query.Add("limit", string(ar.Limit))
-	}
-
-	if ar.Order != "" {
-		query.Add("order", string(ar.Order))
-	}
-
-	endpoint = fmt.Sprintf(
-		"%s",
-		endpoint,
-	)
-
-	queryParams := query.Encode()
-
-	if queryParams != "" {
-		endpoint = fmt.Sprintf(
-			"%s?%s",
-			endpoint,
-			queryParams,
-		)
-	}
-
 	_, err = url.Parse(endpoint)
 	if err != nil {
 		err = errors.Wrap(err, "failed to parse endpoint")
 	}
 
 	return endpoint, err
-
 }

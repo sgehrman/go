@@ -1,4 +1,4 @@
-package horizon
+package horizonclient
 
 import (
 	"testing"
@@ -8,7 +8,6 @@ import (
 )
 
 func TestAccountRequestBuildUrl(t *testing.T) {
-
 	ar := AccountRequest{}
 	endpoint, err := ar.BuildUrl()
 
@@ -40,5 +39,4 @@ func TestAccountRequestBuildUrl(t *testing.T) {
 	// It should return valid account data endpoint and no errors
 	require.NoError(t, err)
 	assert.Equal(t, "accounts/GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU/data/test", endpoint)
-
 }
