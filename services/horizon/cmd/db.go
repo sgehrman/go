@@ -195,7 +195,6 @@ var dbReingestCmd = &cobra.Command{
 	Short: "imports all data",
 	Long:  "reingest runs the ingestion pipeline over every ledger",
 	Run: func(cmd *cobra.Command, args []string) {
-		hlog.DefaultLogger.Logger.Level = config.LogLevel
 		initConfig()
 
 		i := ingestSystem(ingest.Config{
@@ -280,20 +279,6 @@ func reingest(i *ingest.System, args []string) (int, error) {
 
 	if len(args) == 1 && args[0] == "outdated" {
 		return i.ReingestOutdated()
-	}
-
-	if len(args) >= 1 && args[0] == "range" {
-		from, err := strconv.Atoi(args[1])
-		if err != nil {
-			return 0, err
-		}
-
-		to, err := strconv.Atoi(args[2])
-		if err != nil {
-			return 0, err
-		}
-
-		return i.ReingestRange(int32(from), int32(to))
 	}
 
 	for idx, arg := range args {

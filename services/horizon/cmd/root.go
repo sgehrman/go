@@ -301,6 +301,7 @@ func initConfig() {
 
 	// Configure log level
 	log.DefaultLogger.Level = config.LogLevel
+	log.DefaultLogger.Logger.Level = config.LogLevel
 }
 
 func Execute() {
