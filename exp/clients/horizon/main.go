@@ -7,6 +7,13 @@ import (
 	"net/url"
 )
 
+// Cursor represents `cursor` param in queries
+type Cursor string
+
+// Limit represents `limit` param in queries
+type Limit uint
+
+// Order represents `order` param in queries
 type Order string
 
 const (
@@ -79,12 +86,15 @@ type AccountRequest struct {
 	DataKey   string
 }
 
+// EffectRequest struct contains data for getting effects from an horizon server.
+// ForAccount, ForLedger, ForOperation and ForTransaction: Not more than one of these can be set at a time. If none are set, the default is to return all effects.
+// The query parameters (Order, Cursor and Limit) can all be set at the same time
 type EffectRequest struct {
 	ForAccount     string
 	ForLedger      string
 	ForOperation   string
 	ForTransaction string
 	Order          Order
-	Cursor         string
-	Limit          int
+	Cursor         Cursor
+	Limit          Limit
 }

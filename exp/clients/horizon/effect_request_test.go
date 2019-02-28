@@ -50,4 +50,11 @@ func TestEffectRequestBuildUrl(t *testing.T) {
 	if assert.Error(t, err) {
 		assert.Contains(t, err.Error(), "Invalid request. Too many parameters")
 	}
+
+	er = EffectRequest{Cursor: "123456", Limit: 30, Order: OrderAsc}
+	endpoint, err = er.BuildUrl()
+	// It should return valid all effects endpoint with query params and no errors
+	require.NoError(t, err)
+	assert.Equal(t, "effects?cursor=123456&limit=30&order=asc", endpoint)
+
 }

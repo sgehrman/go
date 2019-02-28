@@ -20,7 +20,28 @@ func ExampleClient_AccountDetail() {
 	}
 
 	fmt.Print(account)
+}
 
+func ExampleClient_Effects() {
+
+	client := DefaultPublicNetClient
+	// effects for an account
+	effectRequest := EffectRequest{ForAccount: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU"}
+	effect, err := client.Effects(effectRequest)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Print(effect)
+
+	// all effects
+	effectRequest = EffectRequest{}
+	effect, err = client.Effects(effectRequest)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Print(effect)
 }
 
 func TestAccountDetail(t *testing.T) {

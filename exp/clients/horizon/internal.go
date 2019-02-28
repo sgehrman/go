@@ -3,6 +3,8 @@ package horizonclient
 import (
 	"encoding/json"
 	"net/http"
+	"net/url"
+	"strconv"
 
 	"github.com/stellar/go/support/errors"
 )
@@ -38,14 +40,36 @@ func loadMemo(p *Payment) error {
 	return json.NewDecoder(res.Body).Decode(&p.Memo)
 }
 
-func checkParams(params ...interface{}) int {
+func countParams(params ...interface{}) int {
 	counter := 0
-
 	for _, param := range params {
 		if param != "" {
 			counter++
 		}
 	}
-
 	return counter
+}
+
+func addQueryParams(params ...interface{}) string {
+	query := url.Values{}
+
+	for _, param := range params {
+		switch param := param.(type) {
+		case Cursor:
+			if param != "" {
+				query.Add("cursor", string(param))
+			}
+		case Order:
+			if param != "" {
+				query.Add("order", string(param))
+			}
+		case Limit:
+			if param != 0 {
+				query.Add("limit", strconv.Itoa(int(param)))
+			}
+		default:
+		}
+	}
+
+	return query.Encode()
 }

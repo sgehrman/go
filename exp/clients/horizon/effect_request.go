@@ -11,7 +11,7 @@ import (
 // If no data is set, it defaults to the build the URL for all effects
 func (er EffectRequest) BuildUrl() (endpoint string, err error) {
 
-	nParams := checkParams(er.ForAccount, er.ForLedger, er.ForOperation, er.ForTransaction)
+	nParams := countParams(er.ForAccount, er.ForLedger, er.ForOperation, er.ForTransaction)
 
 	if nParams > 1 {
 		err = errors.New("Invalid request. Too many parameters")
@@ -51,27 +51,7 @@ func (er EffectRequest) BuildUrl() (endpoint string, err error) {
 		)
 	}
 
-	query := url.Values{}
-
-	if er.Cursor != "" {
-		query.Add("cursor", er.Cursor)
-	}
-
-	if er.Limit > 0 {
-		query.Add("limit", string(er.Limit))
-	}
-
-	if er.Order != "" {
-		query.Add("order", string(er.Order))
-	}
-
-	endpoint = fmt.Sprintf(
-		"%s",
-		endpoint,
-	)
-
-	queryParams := query.Encode()
-
+	queryParams := addQueryParams(er.Cursor, er.Limit, er.Order)
 	if queryParams != "" {
 		endpoint = fmt.Sprintf(
 			"%s?%s",
@@ -86,5 +66,4 @@ func (er EffectRequest) BuildUrl() (endpoint string, err error) {
 	}
 
 	return endpoint, err
-
 }

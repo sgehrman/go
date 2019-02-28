@@ -12,7 +12,7 @@ import (
 // If both AccounId and DataKey are present, then the endpoint for getting account data is returned
 func (ar AccountRequest) BuildUrl() (endpoint string, err error) {
 
-	nParams := checkParams(ar.DataKey, ar.AccountId)
+	nParams := countParams(ar.DataKey, ar.AccountId)
 
 	if nParams >= 1 && ar.AccountId == "" {
 		err = errors.New("Invalid request. Too few parameters")
