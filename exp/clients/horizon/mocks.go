@@ -27,5 +27,11 @@ func (m *MockClient) Effects(request EffectRequest) (EffectsPage, error) {
 	return a.Get(0).(EffectsPage), a.Error(1)
 }
 
+// Assets is a mocking method
+func (m *MockClient) Assets(request AssetRequest) (AssetsPage, error) {
+	a := m.Called(request)
+	return a.Get(0).(AssetsPage), a.Error(1)
+}
+
 // ensure that the MockClient implements ClientInterface
 var _ ClientInterface = &MockClient{}

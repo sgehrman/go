@@ -16,6 +16,12 @@ type Limit uint
 // Order represents `order` param in queries
 type Order string
 
+// AssetCode represets `asset_code` param in queries
+type AssetCode string
+
+// AssetIssuer represents `asset_issuer` param in queries
+type AssetIssuer string
+
 const (
 	OrderAsc  Order = "asc"
 	OrderDesc Order = "desc"
@@ -62,6 +68,7 @@ type ClientInterface interface {
 	AccountDetail(request AccountRequest) (Account, error)
 	AccountData(request AccountRequest) (AccountData, error)
 	Effects(request EffectRequest) (EffectsPage, error)
+	Assets(request AssetRequest) (AssetsPage, error)
 }
 
 // DefaultTestNetClient is a default client to connect to test network
@@ -94,6 +101,14 @@ type EffectRequest struct {
 	ForLedger      string
 	ForOperation   string
 	ForTransaction string
+	Order          Order
+	Cursor         Cursor
+	Limit          Limit
+}
+
+type AssetRequest struct {
+	ForAssetCode   AssetCode
+	ForAssetIssuer AssetIssuer
 	Order          Order
 	Cursor         Cursor
 	Limit          Limit

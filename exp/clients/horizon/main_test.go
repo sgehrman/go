@@ -44,6 +44,28 @@ func ExampleClient_Effects() {
 	fmt.Print(effect)
 }
 
+func ExampleClient_Assets() {
+
+	client := DefaultPublicNetClient
+	// assets for asset issuer
+	assetRequest := AssetRequest{ForAssetIssuer: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU"}
+	asset, err := client.Assets(assetRequest)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Print(asset)
+
+	// all assets
+	assetRequest = AssetRequest{}
+	asset, err = client.Assets(assetRequest)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Print(asset)
+}
+
 func TestAccountDetail(t *testing.T) {
 	hmock := httptest.NewClient()
 	client := &Client{
@@ -221,6 +243,37 @@ func TestEffectsRequest(t *testing.T) {
 
 }
 
+func TestAssetsRequest(t *testing.T) {
+	hmock := httptest.NewClient()
+	client := &Client{
+		HorizonURL: "https://localhost/",
+		HTTP:       hmock,
+	}
+
+	assetRequest := AssetRequest{}
+
+	// all assets
+	hmock.On(
+		"GET",
+		"https://localhost/assets",
+	).ReturnString(200, assetsResponse)
+
+	assets, err := client.Assets(assetRequest)
+	if assert.NoError(t, err) {
+		assert.IsType(t, assets, AssetsPage{})
+		record := assets.Embedded.Records[0]
+		assert.Equal(t, record.Asset.Code, "ABC")
+		assert.Equal(t, record.Asset.Issuer, "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU")
+		assert.Equal(t, record.PT, "1")
+		assert.Equal(t, record.NumAccounts, int32(3))
+		assert.Equal(t, record.Amount, "105.0000000")
+		assert.Equal(t, record.Flags.AuthRevocable, false)
+		assert.Equal(t, record.Flags.AuthRequired, true)
+		assert.Equal(t, record.Flags.AuthImmutable, false)
+	}
+
+}
+
 var accountResponse = `{
   "_links": {
     "self": {
@@ -380,4 +433,40 @@ var effectsResponse = `{
       }
     ]
   }
+}`
+
+var assetsResponse = `{
+    "_links": {
+        "self": {
+            "href": "https://horizon-testnet.stellar.org/assets?cursor=&limit=1&order=desc"
+        },
+        "next": {
+            "href": "https://horizon-testnet.stellar.org/assets?cursor=ABC_GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU_credit_alphanum12&limit=1&order=desc"
+        },
+        "prev": {
+            "href": "https://horizon-testnet.stellar.org/assets?cursor=ABC_GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU_credit_alphanum12&limit=1&order=asc"
+        }
+    },
+    "_embedded": {
+        "records": [
+            {
+                "_links": {
+                    "toml": {
+                        "href": ""
+                    }
+                },
+                "asset_type": "credit_alphanum12",
+                "asset_code": "ABC",
+                "asset_issuer": "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU",
+                "paging_token": "1",
+                "amount": "105.0000000",
+                "num_accounts": 3,
+                "flags": {
+                    "auth_required": true,
+                    "auth_revocable": false,
+                    "auth_immutable": false
+                }
+            }
+        ]
+    }
 }`

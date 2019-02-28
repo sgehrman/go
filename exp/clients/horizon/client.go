@@ -56,3 +56,8 @@ func (c *Client) Effects(request EffectRequest) (effects EffectsPage, err error)
 	err = sendRequest(request, *c, &effects)
 	return
 }
+
+func (c *Client) Assets(request AssetRequest) (assets AssetsPage, err error) {
+	err = sendRequest(request, *c, &assets)
+	return
+}

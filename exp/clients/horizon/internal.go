@@ -67,6 +67,14 @@ func addQueryParams(params ...interface{}) string {
 			if param != 0 {
 				query.Add("limit", strconv.Itoa(int(param)))
 			}
+		case AssetCode:
+			if param != "" {
+				query.Add("asset_code", string(param))
+			}
+		case AssetIssuer:
+			if param != "" {
+				query.Add("asset_issuer", string(param))
+			}
 		default:
 		}
 	}

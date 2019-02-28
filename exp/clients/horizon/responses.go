@@ -159,3 +159,13 @@ type Transaction = hProtocol.Transaction
 type AccountData struct {
 	Value string `json:"value"`
 }
+
+// Deprecated: use protocols/horizon instead
+type AssetStat = hProtocol.AssetStat
+
+// AssetsPage contains page of assets returned by Horizon.
+type AssetsPage struct {
+	Embedded struct {
+		Records []AssetStat
+	} `json:"_embedded"`
+}
