@@ -31,6 +31,7 @@ func decodeResponse(resp *http.Response, object interface{}) (err error) {
 	return
 }
 
+// deprecated. To do: remove from new client package
 func loadMemo(p *Payment) error {
 	res, err := http.Get(p.Links.Transaction.Href)
 	if err != nil {
