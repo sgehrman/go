@@ -168,21 +168,32 @@ func TestEffectsRequest(t *testing.T) {
 		"https://localhost/effects",
 	).ReturnString(200, effectsResponse)
 
-	effects, err := client.AllEffects(effectRequest)
+	effects, err := client.Effects(effectRequest)
 	if assert.NoError(t, err) {
 		assert.IsType(t, effects, EffectsPage{})
 
 	}
 
-	// wrong parameters
-	effectRequest = EffectRequest{AccountId: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU"}
+	effectRequest = EffectRequest{ForAccount: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU"}
+	hmock.On(
+		"GET",
+		"https://localhost/accounts/GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU/effects",
+	).ReturnString(200, effectsResponse)
+
+	effects, err = client.Effects(effectRequest)
+	if assert.NoError(t, err) {
+		assert.IsType(t, effects, EffectsPage{})
+	}
+
+	// too many parameters
+	effectRequest = EffectRequest{ForAccount: "GCLWGQPMKXQSPF776IU33AH4PZNOOWNAWGGKVTBQMIC5IMKUNP3E6NVU", ForLedger: "123"}
 	hmock.On(
 		"GET",
 		"https://localhost/effects",
 	).ReturnString(200, effectsResponse)
 
-	_, err = client.AllEffects(effectRequest)
-	// error case: few parameters
+	_, err = client.Effects(effectRequest)
+	// error case
 	if assert.Error(t, err) {
 		assert.Contains(t, err.Error(), "Too many parameters")
 	}

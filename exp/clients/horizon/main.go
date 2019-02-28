@@ -54,10 +54,7 @@ type Client struct {
 type ClientInterface interface {
 	AccountDetail(request AccountRequest) (Account, error)
 	AccountData(request AccountRequest) (AccountData, error)
-	AllEffects(request EffectRequest) (EffectsPage, error)
-	LedgerEffects(request EffectRequest) (EffectsPage, error)
-	OperationEffects(request EffectRequest) (EffectsPage, error)
-	TransactionEffects(request EffectRequest) (EffectsPage, error)
+	Effects(request EffectRequest) (EffectsPage, error)
 }
 
 // DefaultTestNetClient is a default client to connect to test network
@@ -83,11 +80,11 @@ type AccountRequest struct {
 }
 
 type EffectRequest struct {
-	AccountId       string
-	LedgerId        string
-	OperationId     string
-	TransactionHash string
-	Order           Order
-	Cursor          string
-	Limit           int
+	ForAccount     string
+	ForLedger      string
+	ForOperation   string
+	ForTransaction string
+	Order          Order
+	Cursor         string
+	Limit          int
 }

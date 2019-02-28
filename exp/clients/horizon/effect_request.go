@@ -11,9 +11,9 @@ import (
 // If no data is set, it defaults to the build the URL for all effects
 func (er EffectRequest) BuildUrl() (endpoint string, err error) {
 
-	noOfParamsSet := checkParams(er.AccountId, er.LedgerId, er.OperationId, er.TransactionHash)
+	nParams := checkParams(er.ForAccount, er.ForLedger, er.ForOperation, er.ForTransaction)
 
-	if noOfParamsSet > 1 {
+	if nParams > 1 {
 		err = errors.New("Invalid request. Too many parameters")
 	}
 
@@ -23,31 +23,31 @@ func (er EffectRequest) BuildUrl() (endpoint string, err error) {
 
 	endpoint = "effects"
 
-	if er.AccountId != "" {
+	if er.ForAccount != "" {
 		endpoint = fmt.Sprintf(
 			"accounts/%s/effects",
-			er.AccountId,
+			er.ForAccount,
 		)
 	}
 
-	if er.LedgerId != "" {
+	if er.ForLedger != "" {
 		endpoint = fmt.Sprintf(
 			"ledgers/%s/effects",
-			er.LedgerId,
+			er.ForLedger,
 		)
 	}
 
-	if er.OperationId != "" {
+	if er.ForOperation != "" {
 		endpoint = fmt.Sprintf(
 			"operations/%s/effects",
-			er.OperationId,
+			er.ForOperation,
 		)
 	}
 
-	if er.TransactionHash != "" {
+	if er.ForTransaction != "" {
 		endpoint = fmt.Sprintf(
 			"transactions/%s/effects",
-			er.TransactionHash,
+			er.ForTransaction,
 		)
 	}
 
