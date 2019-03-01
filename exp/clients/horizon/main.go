@@ -106,6 +106,7 @@ type EffectRequest struct {
 	Limit          Limit
 }
 
+// AssetRequest struct contains data for getting asset details from an horizon server.
 type AssetRequest struct {
 	ForAssetCode   AssetCode
 	ForAssetIssuer AssetIssuer

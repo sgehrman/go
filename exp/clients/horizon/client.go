@@ -1,6 +1,9 @@
 package horizonclient
 
 import (
+	"net/http"
+
+	"github.com/stellar/go/support/app"
 	"github.com/stellar/go/support/errors"
 )
 
@@ -10,9 +13,17 @@ func sendRequest(hr HorizonRequest, c Client, a interface{}) (err error) {
 		return
 	}
 
-	resp, err := c.HTTP.Get(c.HorizonURL + endpoint)
+	req, err := http.NewRequest("GET", c.HorizonURL+endpoint, nil)
 	if err != nil {
+		return errors.Wrap(err, "Error creating HTTP request")
+	}
+	req.Header.Set("X-Client-Name", "go-stellar-sdk")
+	// to do: Confirm if there is a different way to set version. Not sure about this, since we dont build the sdk into an executable file.
+	// Do we currently track sdk versions differently?
+	req.Header.Set("X-Client-Version", app.Version())
 
+	resp, err := c.HTTP.Do(req)
+	if err != nil {
 		return
 	}
 
@@ -57,6 +68,8 @@ func (c *Client) Effects(request EffectRequest) (effects EffectsPage, err error)
 	return
 }
 
+// Assets returns asset information.
+// See https://www.stellar.org/developers/horizon/reference/endpoints/assets-all.html
 func (c *Client) Assets(request AssetRequest) (assets AssetsPage, err error) {
 	err = sendRequest(request, *c, &assets)
 	return
