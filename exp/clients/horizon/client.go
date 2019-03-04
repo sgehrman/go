@@ -1,6 +1,7 @@
 package horizonclient
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/stellar/go/support/app"
@@ -72,5 +73,11 @@ func (c *Client) Effects(request EffectRequest) (effects EffectsPage, err error)
 // See https://www.stellar.org/developers/horizon/reference/endpoints/assets-all.html
 func (c *Client) Assets(request AssetRequest) (assets AssetsPage, err error) {
 	err = sendRequest(request, *c, &assets)
+	return
+}
+
+func (c *Client) Stream(request StreamRequest, ctx context.Context, handler func(interface{})) (err error) {
+
+	err = request.Stream(c.HorizonURL, ctx, handler)
 	return
 }
