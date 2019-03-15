@@ -7,6 +7,17 @@ import (
 	"github.com/stellar/go/xdr"
 )
 
+//NewCreateOfferOp returns a ManageOffer operation to create a new offer, by
+// setting the OfferID to "0".
+func NewCreateOfferOp(selling, buying *Asset, amount, price string) ManageOffer {
+	return ManageOffer{
+		Selling: selling,
+		Buying:  buying,
+		Amount:  amount,
+		Price:   price,
+	}
+}
+
 // ManageOffer represents the Stellar manage offer operation. See
 // https://www.stellar.org/developers/guides/concepts/list-of-operations.html
 type ManageOffer struct {
