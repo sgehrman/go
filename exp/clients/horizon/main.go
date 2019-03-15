@@ -84,7 +84,7 @@ type ClientInterface interface {
 	FeeStats() (hProtocol.FeeStats, error)
 	Offers(request OfferRequest) (hProtocol.OffersPage, error)
 	Operations(request OperationRequest) (operations.OperationsPage, error)
-	OperationDetail(id uint) (operations.OperationRecordType, error)
+	OperationDetail(id uint) (operations.OperationsPage, error)
 }
 
 // DefaultTestNetClient is a default client to connect to test network

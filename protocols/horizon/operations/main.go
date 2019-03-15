@@ -2,10 +2,10 @@ package operations
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/stellar/go/protocols/horizon/base"
-	"github.com/stellar/go/support/errors"
 	"github.com/stellar/go/support/render/hal"
 	"github.com/stellar/go/xdr"
 )
@@ -180,58 +180,77 @@ type Inflation struct {
 type OperationsPage struct {
 	Links    hal.Links `json:"_links"`
 	Embedded struct {
-		Records []OperationRecordType
+		Records []interface{}
 	} `json:"_embedded"`
 }
 
-type OperationRecordType struct {
-	Operation interface{}
-}
+func (ops *OperationsPage) UnmarshalJSON(data []byte) error {
+	var opsPage struct {
+		Links    hal.Links `json:"_links"`
+		Embedded struct {
+			Records []interface{}
+		} `json:"_embedded"`
+	}
 
-func (ort *OperationRecordType) UnmarshalJSON(data []byte) error {
-	temp := Base{}
-	if err := json.Unmarshal(data, &temp); err != nil {
+	if err := json.Unmarshal(data, &opsPage); err != nil {
 		return err
 	}
 
-	// to do: add more operation types
-	switch temp.Type {
-	case TypeNames[xdr.OperationTypeCreateAccount]:
-		var op CreateAccount
-		if err := json.Unmarshal(data, &op); err != nil {
-			return err
+	for i, j := range opsPage.Embedded.Records {
+		switch vv := j.(type) {
+		case map[string]interface{}:
+			for x, y := range vv {
+				switch y {
+				case TypeNames[xdr.OperationTypeCreateAccount]:
+					fmt.Println(x, "is createacc", y)
+					var op CreateAccount
+					dataString, err := json.Marshal(vv)
+					if err != nil {
+						return err
+					}
+					if err := json.Unmarshal(dataString, &op); err != nil {
+						return err
+					}
+					opsPage.Embedded.Records[i] = op
+
+				default:
+				}
+			}
+		default:
 		}
-		ort.Operation = op
-	case TypeNames[xdr.OperationTypePayment]:
-		var op Payment
-		if err := json.Unmarshal(data, &op); err != nil {
-			return err
-		}
-		ort.Operation = op
-	case TypeNames[xdr.OperationTypeManageOffer]:
-		var op ManageOffer
-		if err := json.Unmarshal(data, &op); err != nil {
-			return err
-		}
-		ort.Operation = op
-	case TypeNames[xdr.OperationTypeChangeTrust]:
-		var op ChangeTrust
-		if err := json.Unmarshal(data, &op); err != nil {
-			return err
-		}
-		ort.Operation = op
-	default:
-		ort.Operation = temp
 
 	}
-	return nil
-}
 
-func AssertTypes(object interface{}, val *interface{}) error {
-	br, ok := object.(ChangeTrust)
-	if !ok {
-		return errors.New("type assertion failed")
-	}
-	*val = br
+	ops.Embedded.Records = opsPage.Embedded.Records
+	// // to do: add more operation types
+	// switch temp.Type {
+	// case TypeNames[xdr.OperationTypeCreateAccount]:
+	// 	var op CreateAccount
+	// 	if err := json.Unmarshal(data, &op); err != nil {
+	// 		return err
+	// 	}
+	// 	ort.Operation = op
+	// case TypeNames[xdr.OperationTypePayment]:
+	// 	var op Payment
+	// 	if err := json.Unmarshal(data, &op); err != nil {
+	// 		return err
+	// 	}
+	// 	ort.Operation = op
+	// case TypeNames[xdr.OperationTypeManageOffer]:
+	// 	var op ManageOffer
+	// 	if err := json.Unmarshal(data, &op); err != nil {
+	// 		return err
+	// 	}
+	// 	ort.Operation = op
+	// case TypeNames[xdr.OperationTypeChangeTrust]:
+	// 	var op ChangeTrust
+	// 	if err := json.Unmarshal(data, &op); err != nil {
+	// 		return err
+	// 	}
+	// 	ort.Operation = op
+	// default:
+	// 	ort.Operation = temp
+
+	// }
 	return nil
 }
