@@ -8,6 +8,7 @@ import (
 	"net/url"
 
 	hProtocol "github.com/stellar/go/protocols/horizon"
+	"github.com/stellar/go/protocols/horizon/operations"
 	"github.com/stellar/go/support/render/problem"
 )
 
@@ -25,6 +26,9 @@ type AssetCode string
 
 // AssetIssuer represents `asset_issuer` param in queries
 type AssetIssuer string
+
+// IncludeFailed represents `include_failed` param in queries
+type IncludeFailed bool
 
 const (
 	OrderAsc  Order = "asc"
@@ -79,6 +83,8 @@ type ClientInterface interface {
 	Stream(ctx context.Context, request StreamRequest, handler func(interface{})) error
 	FeeStats() (hProtocol.FeeStats, error)
 	Offers(request OfferRequest) (hProtocol.OffersPage, error)
+	Operations(request OperationRequest) (operations.OperationsPage, error)
+	OperationDetail(id uint) (operations.OperationRecordType, error)
 }
 
 // DefaultTestNetClient is a default client to connect to test network
@@ -153,4 +159,16 @@ type OfferRequest struct {
 	Order      Order
 	Cursor     Cursor
 	Limit      Limit
+}
+
+// OperationRequest struct contains data for getting operation details from an horizon servers
+type OperationRequest struct {
+	ForAccount     string
+	ForLedger      int
+	ForTransaction string
+	forOperationId uint
+	Order          Order
+	Cursor         Cursor
+	Limit          Limit
+	IncludeFailed  IncludeFailed
 }

@@ -1,9 +1,11 @@
 package operations
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/stellar/go/protocols/horizon/base"
+	"github.com/stellar/go/support/errors"
 	"github.com/stellar/go/support/render/hal"
 	"github.com/stellar/go/xdr"
 )
@@ -173,4 +175,63 @@ type AccountMerge struct {
 // Inflation.
 type Inflation struct {
 	Base
+}
+
+type OperationsPage struct {
+	Links    hal.Links `json:"_links"`
+	Embedded struct {
+		Records []OperationRecordType
+	} `json:"_embedded"`
+}
+
+type OperationRecordType struct {
+	Operation interface{}
+}
+
+func (ort *OperationRecordType) UnmarshalJSON(data []byte) error {
+	temp := Base{}
+	if err := json.Unmarshal(data, &temp); err != nil {
+		return err
+	}
+
+	// to do: add more operation types
+	switch temp.Type {
+	case TypeNames[xdr.OperationTypeCreateAccount]:
+		var op CreateAccount
+		if err := json.Unmarshal(data, &op); err != nil {
+			return err
+		}
+		ort.Operation = op
+	case TypeNames[xdr.OperationTypePayment]:
+		var op Payment
+		if err := json.Unmarshal(data, &op); err != nil {
+			return err
+		}
+		ort.Operation = op
+	case TypeNames[xdr.OperationTypeManageOffer]:
+		var op ManageOffer
+		if err := json.Unmarshal(data, &op); err != nil {
+			return err
+		}
+		ort.Operation = op
+	case TypeNames[xdr.OperationTypeChangeTrust]:
+		var op ChangeTrust
+		if err := json.Unmarshal(data, &op); err != nil {
+			return err
+		}
+		ort.Operation = op
+	default:
+		ort.Operation = temp
+
+	}
+	return nil
+}
+
+func AssertTypes(object interface{}, val *interface{}) error {
+	br, ok := object.(ChangeTrust)
+	if !ok {
+		return errors.New("type assertion failed")
+	}
+	*val = br
+	return nil
 }

@@ -34,9 +34,24 @@ func decodeResponse(resp *http.Response, object interface{}) (err error) {
 func countParams(params ...interface{}) int {
 	counter := 0
 	for _, param := range params {
-		if param != "" {
+		switch param := param.(type) {
+		case string:
+			if param != "" {
+				counter++
+			}
+		case int:
+			if param > 0 {
+				counter++
+			}
+		case uint:
+			if param > 0 {
+				counter++
+			}
+		case bool:
 			counter++
+		default:
 		}
+
 	}
 	return counter
 }

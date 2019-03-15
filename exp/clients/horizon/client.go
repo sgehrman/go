@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	hProtocol "github.com/stellar/go/protocols/horizon"
+	"github.com/stellar/go/protocols/horizon/operations"
 	"github.com/stellar/go/support/app"
 	"github.com/stellar/go/support/errors"
 )
@@ -134,5 +135,29 @@ func (c *Client) Offers(request OfferRequest) (offers hProtocol.OffersPage, err 
 	}
 
 	err = c.sendRequest(request, &offers)
+	return
+}
+
+// Operations returns stellar operations(https://www.stellar.org/developers/horizon/reference/resources/operation.html)
+// It can be used to return operations for an account, a ledger, a transaction and all operations on the network.
+func (c *Client) Operations(request OperationRequest) (ops operations.OperationsPage, err error) {
+	err = c.sendRequest(request, &ops)
+	return
+}
+
+// OperationDetail returns a single stellar operations(https://www.stellar.org/developers/horizon/reference/resources/operation.html)
+// for a given operaion id
+func (c *Client) OperationDetail(id uint) (ops operations.OperationRecordType, err error) {
+	if id <= 0 {
+		err = errors.New("Invalid operation id provided")
+	}
+
+	if err != nil {
+		return
+	}
+
+	request := OperationRequest{forOperationId: id}
+
+	err = c.sendRequest(request, &ops)
 	return
 }
