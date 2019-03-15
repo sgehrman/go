@@ -1,7 +1,6 @@
 package txnbuild
 
 import (
-	"github.com/stellar/go/amount"
 	"github.com/stellar/go/support/errors"
 	"github.com/stellar/go/xdr"
 )
@@ -18,28 +17,29 @@ type AllowTrust struct {
 // BuildXDR for AllowTrust returns a fully configured XDR Operation.
 func (at *AllowTrust) BuildXDR() (xdr.Operation, error) {
 	var err error
+
+	// Set XDR address associated with the trustline
 	err = at.xdrOp.Trustor.SetAddress(at.Trustor)
 	if err != nil {
 		return xdr.Operation{}, errors.Wrap(err, "Failed to set trustor address")
 	}
 
+	// Validate this is an issued asset
 	if at.Type.IsNative() {
 		return xdr.Operation{}, errors.New("Trustline doesn't exist for a native (XLM) asset")
 	}
 
-	// TODO: AllowTrust has a special asset op type. Need to map to it
-	at.xdrOp.Asset, err = ct.Line.ToXDR()
+	// AllowTrust has a special asset type - map to it
+	at.xdrOp.Asset, err = at.Type.ToXDRAllowTrustOpAsset()
 	if err != nil {
 		return xdr.Operation{}, errors.Wrap(err, "Can't convert asset for trustline to XDR")
 	}
 
-	ct.xdrOp.Limit, err = amount.Parse(ct.Limit)
-	if err != nil {
-		return xdr.Operation{}, errors.Wrap(err, "Failed to parse limit amount")
-	}
+	// Set XDR auth flag
+	at.xdrOp.Authorize = at.Authorize
 
-	opType := xdr.OperationTypeChangeTrust
-	body, err := xdr.NewOperationBody(opType, ct.xdrOp)
+	opType := xdr.OperationTypeAllowTrust
+	body, err := xdr.NewOperationBody(opType, at.xdrOp)
 	if err != nil {
 		return xdr.Operation{}, errors.Wrap(err, "Failed to build XDR OperationBody")
 	}
