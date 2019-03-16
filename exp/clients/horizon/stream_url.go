@@ -63,26 +63,8 @@ func (surl *StreamURL) BuildUrl() (endpoint string, err error) {
 			surl.resource,
 		)
 	}
-
-	// NOT sure how this works, here for a placeholder for now
-	if surl.ForAssetCode != "" {
-		endpoint = fmt.Sprintf(
-			"%s/%s",
-			surl.resource,
-			surl.ForAssetCode,
-		)
-	}
-
-	// NOT sure how this works, here for a placeholder for now
-	if surl.ForAssetIssuer != "" {
-		endpoint = fmt.Sprintf(
-			"%s/%s",
-			surl.resource,
-			surl.ForAssetIssuer,
-		)
-	}
-
-	queryParams := addQueryParams(surl.Cursor, surl.Limit, surl.Order)
+ 
+	queryParams := addQueryParams(surl.ForAssetCode, surl.ForAssetIssuer, surl.Cursor, surl.Limit, surl.Order)
 	if queryParams != "" {
 		endpoint = fmt.Sprintf(
 			"%s?%s",

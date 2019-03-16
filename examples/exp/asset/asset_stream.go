@@ -11,7 +11,7 @@ import (
 func main() {
 	c := horizonclient.DefaultTestNetClient
 
-	request := horizonclient.AssetRequest{}
+	request := horizonclient.AssetRequest{ForAssetIssuer: "GCYF2F6QATA4L43DSXTL72D6BEBFKTN6OW7Y65PFS3QSPLDO5LOHSAYZ"}
 
 	ctx := context.Background()
 
