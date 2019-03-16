@@ -59,12 +59,13 @@ func (er OperationRequest) Stream(
 	}
 
 	return surl.Stream(ctx, client, func(data []byte) error {
-		var effect effects.Base
-		err = json.Unmarshal(data, &effect)
+		var objmap map[string]*json.RawMessage
+
+		err = json.Unmarshal(data, &objmap)
 		if err != nil {
 			return errors.Wrap(err, "Error unmarshaling data")
 		}
-		handler(effect)
+		handler(objmap)
 		return nil
 	})
 }

@@ -94,6 +94,8 @@ func (surl *StreamURL) Stream(
 	for {
 		url, _ := surl.BuildUrl()
 
+		fmt.Println("Stream: ", url)
+
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
 			return errors.Wrap(err, "Error creating HTTP request")
@@ -178,6 +180,7 @@ func (surl *StreamURL) Stream(
 			// new SSE decoder that can handle io.Reader without using ioutils.ReadAll().
 			for _, event := range events {
 				if event.Event != "message" {
+					// fmt.Println(event)  // writes: {open 1000 0 "hello"}
 					continue
 				}
 

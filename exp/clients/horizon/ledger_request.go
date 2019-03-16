@@ -1,6 +1,8 @@
 package horizonclient
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"net/url"
 
@@ -35,4 +37,36 @@ func (lr LedgerRequest) BuildUrl() (endpoint string, err error) {
 	}
 
 	return endpoint, err
+}
+
+func (er LedgerRequest) Stream(
+	ctx context.Context,
+	horizonURL string,
+	client HTTP,
+	handler func(interface{}),
+) (err error) {
+	surl := &StreamURL{
+		horizonURL: horizonURL,
+		resource:   "ledgers",
+
+		ForAccount:     "",
+		ForLedger:      "",
+		ForOperation:   "",
+		ForTransaction: "",
+		Order:          er.Order,
+		Cursor:         er.Cursor,
+		Limit:          er.Limit,
+	}
+
+	return surl.Stream(ctx, client, func(data []byte) error {
+		var objmap map[string]*json.RawMessage
+
+		err = json.Unmarshal(data, &objmap)
+		if err != nil {
+			return errors.Wrap(err, "Error unmarshaling data")
+		}
+
+		handler(objmap)
+		return nil
+	})
 }
