@@ -29,60 +29,35 @@
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "remotePath": "",
-            "port": 2345,
-            "host": "127.0.0.1",
-            "program": "${workspaceRoot}/examples/exp/effect/effect_stream.go",
-            "env": {   },
-            "args": []
+            "program": "${workspaceRoot}/examples/exp/effect/effect_stream.go"
         },
         {
             "name": "Offers Stream",
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "remotePath": "",
-            "port": 2345,
-            "host": "127.0.0.1",
-            "program": "${workspaceRoot}/examples/exp/offer/offer_stream.go",
-            "env": { },
-            "args": []
+            "program": "${workspaceRoot}/examples/exp/offer/offer_stream.go"
         },
         {
             "name": "Operation Stream",
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "remotePath": "",
-            "port": 2345,
-            "host": "127.0.0.1",
-            "program": "${workspaceRoot}/examples/exp/operation/operation_stream.go",
-            "env": { },
-            "args": []
+            "program": "${workspaceRoot}/examples/exp/operation/operation_stream.go"
         },
         {
             "name": "Ledger Stream",
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "remotePath": "",
-            "port": 2345,
-            "host": "127.0.0.1",
-            "program": "${workspaceRoot}/examples/exp/ledger/ledger_stream.go",
-            "env": { },
-            "args": []
-        }, 
+            "program": "${workspaceRoot}/examples/exp/ledger/ledger_stream.go"
+        },
         {
             "name": "Asset Stream",
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "remotePath": "",
-            "port": 2345,
-            "host": "127.0.0.1",
-            "program": "${workspaceRoot}/examples/exp/asset/asset_stream.go",
-            "env": { },
-            "args": []
+            "program": "${workspaceRoot}/examples/exp/asset/asset_stream.go"
         },
         {
             "name": "Remote",
