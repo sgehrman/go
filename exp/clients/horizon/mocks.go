@@ -30,6 +30,14 @@ func (m *MockClient) Effects(request EffectRequest) (hProtocol.EffectsPage, erro
 	return a.Get(0).(hProtocol.EffectsPage), a.Error(1)
 }
 
+// Operations is a mocking method
+func (m *MockClient) Operations(request OperationRequest) (hProtocol.EffectsPage, error) {
+	a := m.Called(request)
+
+	// don't see an OperationsPage?  just use EffectsPage for now
+	return a.Get(0).(hProtocol.EffectsPage), a.Error(1)
+}
+
 // Assets is a mocking method
 func (m *MockClient) Assets(request AssetRequest) (hProtocol.AssetsPage, error) {
 	a := m.Called(request)

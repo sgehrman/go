@@ -72,6 +72,7 @@ type ClientInterface interface {
 	AccountDetail(request AccountRequest) (hProtocol.Account, error)
 	AccountData(request AccountRequest) (hProtocol.AccountData, error)
 	Effects(request EffectRequest) (hProtocol.EffectsPage, error)
+	Operations(request OperationRequest) (hProtocol.EffectsPage, error)
 	Assets(request AssetRequest) (hProtocol.AssetsPage, error)
 	Ledgers(request LedgerRequest) (hProtocol.LedgersPage, error)
 	LedgerDetail(sequence uint32) (hProtocol.Ledger, error)
@@ -122,6 +123,18 @@ type EffectRequest struct {
 	Limit          Limit
 }
 
+// OperationRequest struct contains data for getting effects from an horizon server.
+// ForAccount, ForLedger, ForOperation and ForTransaction: Not more than one of these can be set at a time. If none are set, the default is to return all effects.
+// The query parameters (Order, Cursor and Limit) can all be set at the same time
+type OperationRequest struct {
+	ForAccount     string
+	ForLedger      string
+	ForTransaction string
+	Order          Order
+	Cursor         Cursor
+	Limit          Limit
+}
+
 // AssetRequest struct contains data for getting asset details from an horizon server.
 type AssetRequest struct {
 	ForAssetCode   AssetCode
@@ -153,4 +166,18 @@ type OfferRequest struct {
 	Order      Order
 	Cursor     Cursor
 	Limit      Limit
+}
+
+type StreamURL struct {
+	horizonURL string
+	// resouce: effects, operations etc
+	resource string
+
+	ForAccount     string
+	ForLedger      string
+	ForOperation   string
+	ForTransaction string
+	Order          Order
+	Cursor         Cursor
+	Limit          Limit
 }

@@ -8,20 +8,20 @@ import (
 	"github.com/stellar/go/support/errors"
 )
 
-// EffectHandler is a function that is called when a new effect is received
-type EffectHandler func(effects.Base)
+// OperationHandler is a function that is called when a new effect is received
+type OperationHandler func(effects.Base)
 
 // BuildUrl creates the endpoint to be queried based on the data in the EffectRequest struct.
 // If no data is set, it defaults to the build the URL for all effects
-func (er EffectRequest) BuildUrl() (endpoint string, err error) {
+func (er OperationRequest) BuildUrl() (endpoint string, err error) {
 
 	surl := &StreamURL{
 		horizonURL: "",
-		resource:   "effects",
+		resource:   "operations",
 
 		ForAccount:     er.ForAccount,
 		ForLedger:      er.ForLedger,
-		ForOperation:   er.ForOperation,
+		ForOperation:   "",
 		ForTransaction: er.ForTransaction,
 		Order:          er.Order,
 		Cursor:         er.Cursor,
@@ -39,7 +39,7 @@ func (er EffectRequest) BuildUrl() (endpoint string, err error) {
 	return endpoint, err
 }
 
-func (er EffectRequest) Stream(
+func (er OperationRequest) Stream(
 	ctx context.Context,
 	horizonURL string,
 	client HTTP,
@@ -47,11 +47,11 @@ func (er EffectRequest) Stream(
 ) (err error) {
 	surl := &StreamURL{
 		horizonURL: horizonURL,
-		resource:   "effects",
+		resource:   "operations",
 
 		ForAccount:     er.ForAccount,
 		ForLedger:      er.ForLedger,
-		ForOperation:   er.ForOperation,
+		ForOperation:   "",
 		ForTransaction: er.ForTransaction,
 		Order:          er.Order,
 		Cursor:         er.Cursor,
