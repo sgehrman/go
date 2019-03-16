@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/url"
 
+	hProtocol "github.com/stellar/go/protocols/horizon"
+
 	"github.com/stellar/go/support/errors"
 )
 
@@ -54,14 +56,14 @@ func (er LedgerRequest) Stream(
 	}
 
 	return surl.Stream(ctx, client, func(data []byte) error {
-		var objmap map[string]*json.RawMessage
+		var ledger hProtocol.Ledger
+		err = json.Unmarshal(data, &ledger)
 
-		err = json.Unmarshal(data, &objmap)
 		if err != nil {
 			return errors.Wrap(err, "Error unmarshaling data")
 		}
 
-		handler(objmap)
+		handler(ledger)
 		return nil
 	})
 }

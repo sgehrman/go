@@ -4,12 +4,12 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/stellar/go/protocols/horizon/effects"
+	"github.com/stellar/go/protocols/horizon/operations"
 	"github.com/stellar/go/support/errors"
 )
 
 // OperationHandler is a function that is called when a new effect is received
-type OperationHandler func(effects.Base)
+type OperationHandler func(operations.Base)
 
 // BuildUrl creates the endpoint to be queried based on the data in the EffectRequest struct.
 // If no data is set, it defaults to the build the URL for all effects
@@ -57,13 +57,13 @@ func (er OperationRequest) Stream(
 	}
 
 	return surl.Stream(ctx, client, func(data []byte) error {
-		var objmap map[string]*json.RawMessage
+		var operation operations.Base
 
-		err = json.Unmarshal(data, &objmap)
+		err = json.Unmarshal(data, &operation)
 		if err != nil {
 			return errors.Wrap(err, "Error unmarshaling data")
 		}
-		handler(objmap)
+		handler(operation)
 		return nil
 	})
 }

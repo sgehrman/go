@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 
+	hProtocol "github.com/stellar/go/protocols/horizon"
+
 	"github.com/stellar/go/support/errors"
 )
 
@@ -47,13 +49,17 @@ func (er OfferRequest) Stream(
 	}
 
 	return surl.Stream(ctx, client, func(data []byte) error {
-		var objmap map[string]*json.RawMessage
+		// use this if you want everything
+		// var objmap map[string]*json.RawMessage
+		// err = json.Unmarshal(data, &objmap)
 
-		err = json.Unmarshal(data, &objmap)
+		var offer hProtocol.Offer
+		err = json.Unmarshal(data, &offer)
+
 		if err != nil {
 			return errors.Wrap(err, "Error unmarshaling data")
 		}
-		handler(objmap)
+		handler(offer)
 		return nil
 	})
 }

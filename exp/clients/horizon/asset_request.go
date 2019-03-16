@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/stellar/go/protocols/horizon/base"
+
 	"github.com/stellar/go/support/errors"
 )
 
@@ -50,13 +52,13 @@ func (ar AssetRequest) Stream(
 	}
 
 	return surl.Stream(ctx, client, func(data []byte) error {
-		var objmap map[string]*json.RawMessage
+		var asset base.Asset
 
-		err = json.Unmarshal(data, &objmap)
+		err = json.Unmarshal(data, &asset)
 		if err != nil {
 			return errors.Wrap(err, "Error unmarshaling data")
 		}
-		handler(objmap)
+		handler(asset)
 		return nil
 	})
 }
