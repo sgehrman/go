@@ -180,4 +180,6 @@ type StreamURL struct {
 	Order          Order
 	Cursor         Cursor
 	Limit          Limit
+	ForAssetCode   AssetCode
+	ForAssetIssuer AssetIssuer
 }
