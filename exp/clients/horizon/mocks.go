@@ -38,6 +38,7 @@ func (m *MockClient) Assets(request AssetRequest) (hProtocol.AssetsPage, error) 
 
 func (m *MockClient) Stream(ctx context.Context,
 	request StreamRequest,
+	client HTTP,
 	handler func(interface{}),
 ) error {
 	a := m.Called(request, ctx, handler)

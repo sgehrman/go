@@ -76,7 +76,7 @@ type ClientInterface interface {
 	Ledgers(request LedgerRequest) (hProtocol.LedgersPage, error)
 	LedgerDetail(sequence uint32) (hProtocol.Ledger, error)
 	Metrics() (hProtocol.Metrics, error)
-	Stream(ctx context.Context, request StreamRequest, handler func(interface{})) error
+	Stream(ctx context.Context, request StreamRequest, client HTTP, handler func(interface{})) error
 	FeeStats() (hProtocol.FeeStats, error)
 	Offers(request OfferRequest) (hProtocol.OffersPage, error)
 }
@@ -100,7 +100,7 @@ type HorizonRequest interface {
 
 // HorizonRequest contains methods implemented by request structs for endpoints that support streaming
 type StreamRequest interface {
-	Stream(ctx context.Context, horizonURL string, handler func(interface{})) error
+	Stream(ctx context.Context, horizonURL string, client HTTP, handler func(interface{})) error
 }
 
 // AccountRequest struct contains data for making requests to the accounts endpoint of an horizon server

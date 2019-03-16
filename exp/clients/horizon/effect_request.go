@@ -84,8 +84,9 @@ func (er EffectRequest) BuildUrl() (endpoint string, err error) {
 // To do: move this from here
 func stream(
 	ctx context.Context,
-	baseURL string,
+	horizonUrl string,
 	cursor *Cursor,
+	client HTTP,
 	handler func(data []byte) error,
 ) error {
 	query := url.Values{}
@@ -93,10 +94,9 @@ func stream(
 		query.Set("cursor", string(*cursor))
 	}
 
-	client := http.Client{}
-
+	path := "effects"
 	for {
-		req, err := http.NewRequest("GET", fmt.Sprintf("%s?%s", baseURL, query.Encode()), nil)
+		req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s?%s", horizonUrl, path, query.Encode()), nil)
 		if err != nil {
 			return errors.Wrap(err, "Error creating HTTP request")
 		}
@@ -209,11 +209,11 @@ func stream(
 func (er EffectRequest) Stream(
 	ctx context.Context,
 	horizonURL string,
+	client HTTP,
 	handler func(interface{}),
 ) (err error) {
 
-	url := fmt.Sprintf("%s/effects", horizonURL)
-	return stream(ctx, url, &er.Cursor, func(data []byte) error {
+	return stream(ctx, horizonURL, &er.Cursor, client, func(data []byte) error {
 		var effect effects.Base
 		err = json.Unmarshal(data, &effect)
 		if err != nil {

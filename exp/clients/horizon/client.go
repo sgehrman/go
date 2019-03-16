@@ -78,7 +78,7 @@ func (c *Client) Assets(request AssetRequest) (assets hProtocol.AssetsPage, err 
 // Stream is for endpoints that support streaming
 func (c *Client) Stream(ctx context.Context, request StreamRequest, handler func(interface{})) (err error) {
 
-	err = request.Stream(ctx, c.HorizonURL, handler)
+	err = request.Stream(ctx, c.HorizonURL, c.HTTP, handler)
 	return
 }
 

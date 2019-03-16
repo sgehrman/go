@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	horizonclient "github.com/stellar/go/exp/clients/horizon"
@@ -10,14 +11,19 @@ import (
 func main() {
 	c := horizonclient.DefaultTestNetClient
 
-	er := horizonclient.EffectRequest{Limit: 10, Cursor: "now"}
+	er := horizonclient.EffectRequest{Cursor: "now"}
 
 	ctx := context.Background()
 
-	fmt.Println("starting")
+	fmt.Println("EffectRequest stream test")
 
 	err := c.Stream(ctx, er, func(data interface{}) {
-		fmt.Println(data)
+		json, err := json.MarshalIndent(data, "", "    ")
+
+		if err != nil {
+			fmt.Println("error in MarshalIndent: ", err)
+		}
+		fmt.Println(string(json))
 	})
 
 	if err != nil {
