@@ -11,11 +11,11 @@ import (
 func main() {
 	c := horizonclient.DefaultTestNetClient
 
-	request := horizonclient.EffectRequest{Cursor: "now"}
+	request := horizonclient.OfferRequest{ForAccount: "GBEHNI5AKMOIMFXZE6YIWGO26ZNUZFYOGVZQYUAVTG72VREMF4FPSZ5A"}
 
 	ctx := context.Background()
 
-	fmt.Println("EffectRequest stream test")
+	fmt.Println("OfferRequest stream test")
 
 	err := c.Stream(ctx, request, func(data interface{}) {
 		json, err := json.MarshalIndent(data, "", "    ")

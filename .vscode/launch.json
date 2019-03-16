@@ -48,6 +48,29 @@
             "args": []
         },
         {
+            "name": "Offers Stream",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "remotePath": "",
+            "port": 2345,
+            "host": "127.0.0.1",
+            "program": "${workspaceRoot}/examples/exp/offer/offer_stream.go",
+            "env": {
+                "DATABASE_URL": "postgres://stellar:password@localhost:6432/horizondb?sslmode=disable",
+                "STELLAR_CORE_DATABASE_URL": "postgres://stellar:password@localhost:6432/coredb?sslmode=disable",
+                "STELLAR_CORE_URL": "http://localhost:11626",
+                "PER_HOUR_RATE_LIMIT": 72000,
+                "FRIENDBOT_URL": "http://localhost:8004/",
+                "LOG_LEVEL": "info",
+                "INGEST": "true",
+                "NETWORK_PASSPHRASE": "Test SDF Network ; September 2015",
+                "HISTORY_RETENTION_COUNT": 864000,
+                "ALLOW_EMPTY_LEDGER_DATA_RESPONSES": "true"
+            },
+            "args": []
+        },
+        {
             "name": "Operation Stream",
             "type": "go",
             "request": "launch",
