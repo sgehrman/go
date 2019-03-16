@@ -48,14 +48,9 @@ func (er LedgerRequest) Stream(
 	surl := &StreamURL{
 		horizonURL: horizonURL,
 		resource:   "ledgers",
-
-		ForAccount:     "",
-		ForLedger:      "",
-		ForOperation:   "",
-		ForTransaction: "",
-		Order:          er.Order,
-		Cursor:         er.Cursor,
-		Limit:          er.Limit,
+		Order:      er.Order,
+		Cursor:     er.Cursor,
+		Limit:      er.Limit,
 	}
 
 	return surl.Stream(ctx, client, func(data []byte) error {

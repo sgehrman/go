@@ -21,7 +21,6 @@ func (er OperationRequest) BuildUrl() (endpoint string, err error) {
 
 		ForAccount:     er.ForAccount,
 		ForLedger:      er.ForLedger,
-		ForOperation:   "",
 		ForTransaction: er.ForTransaction,
 		Order:          er.Order,
 		Cursor:         er.Cursor,
@@ -51,7 +50,6 @@ func (er OperationRequest) Stream(
 
 		ForAccount:     er.ForAccount,
 		ForLedger:      er.ForLedger,
-		ForOperation:   "",
 		ForTransaction: er.ForTransaction,
 		Order:          er.Order,
 		Cursor:         er.Cursor,
