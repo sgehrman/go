@@ -8,8 +8,10 @@ import (
 )
 
 func TestAccountRequestBuildUrl(t *testing.T) {
+	var endpoint string
+
 	ar := AccountRequest{}
-	endpoint, err := ar.BuildUrl()
+	_, err := ar.BuildUrl()
 
 	// error case: No parameters
 	if assert.Error(t, err) {
@@ -17,7 +19,7 @@ func TestAccountRequestBuildUrl(t *testing.T) {
 	}
 
 	ar.DataKey = "test"
-	endpoint, err = ar.BuildUrl()
+	_, err = ar.BuildUrl()
 
 	// error case: few parameters for building account data endpoint
 	if assert.Error(t, err) {

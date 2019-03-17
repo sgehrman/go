@@ -44,7 +44,7 @@ func TestEffectRequestBuildUrl(t *testing.T) {
 	assert.Equal(t, "transactions/123/effects", endpoint)
 
 	er = EffectRequest{ForLedger: "123", ForOperation: "789"}
-	endpoint, err = er.BuildUrl()
+	_, err = er.BuildUrl()
 
 	// error case: too many parameters for building any effect endpoint
 	if assert.Error(t, err) {
